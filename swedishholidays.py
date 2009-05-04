@@ -62,6 +62,9 @@ def midsommardagen(year):
     Midsommardagen is always the saturday in the period June 20-26
     >>> midsommardagen(2009)
     datetime.date(2009, 6, 20)
+    >>> midsommardagen('foo')
+    Traceback (most recent call last):
+    TypeError: an integer is required
     """
 
     date = datetime.date(year, 6, 20)
@@ -82,6 +85,9 @@ def alla_helgons_dag(year):
 
     >>> alla_helgons_dag(2009)
     datetime.date(2009, 10, 31)
+    >>> alla_helgons_dag('foo')
+    Traceback (most recent call last):
+    TypeError: an integer is required
     """
 
     date = datetime.date(year, 10, 31)
@@ -103,7 +109,13 @@ def paskdagen(year):
 
     >>> paskdagen(2009)
     datetime.date(2009, 4, 12)
+    >>> paskdagen('foo')
+    Traceback (most recent call last):
+    TypeError: an integer is required
     """
+
+    if not type(year) is int:
+        raise TypeError('an integer is required')
 
     a = year % 19
     b = year / 100
@@ -130,11 +142,14 @@ def _generate_holidays(year):
     >>> _generate_holidays(2009)
     >>> len(Holiday.holidays)
     11
-
     >>> _generate_holidays(1999)
     >>> len(Holiday.holidays)
     22
+    >>> _generate_holidays('foo')
+    Traceback (most recent call last):
+    TypeError: an integer is required
     """
+
 
     Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
     Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
@@ -160,7 +175,13 @@ def is_holiday(date):
     True
     >>> is_holiday(datetime.date(2010, 2, 2))
     False
+    >>> is_holiday('foo')
+    Traceback (most recent call last):
+    TypeError: an datetime.date is required
     """
+
+    if not isinstance(date, datetime.date):
+        raise TypeError('an datetime.date object is required')
 
     year = date.year
 
