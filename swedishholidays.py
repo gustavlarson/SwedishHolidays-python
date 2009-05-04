@@ -107,15 +107,15 @@ def paskdagen(year):
     return datetime.date(year, month, date)
 
 
-def generate_holidays(year):
+def _generate_holidays(year):
     """Generates all the holidays for a given year
 
 
-    >>> generate_holidays(2009)
+    >>> _generate_holidays(2009)
     >>> len(Holiday.holidays)
     11
 
-    >>> generate_holidays(1999)
+    >>> _generate_holidays(1999)
     >>> len(Holiday.holidays)
     22
     """
@@ -151,7 +151,7 @@ def is_holiday(date):
     # If nyårsdagen of the year that we are querying is not in the list of
     # holidays, we need to generate the holidays of this year
     if not datetime.date(year, 1, 1) in [h.date for h in Holiday.holidays]:
-        generate_holidays(year)
+        _generate_holidays(year)
 
     return date in [h.date for h in Holiday.holidays]
 
