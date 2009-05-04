@@ -36,25 +36,55 @@ class Holiday:
         self.name = name
         Holiday.holidays.append(self)
 
-#Midsommardagen is always the saturday in the period june 20-26
 def midsommardagen(year):
+    """Return the date of midsommardagen(Midsummer's Day)
+
+    The result is returned as a datetime.date()
+
+    Midsommardagen is always the saturday in the period June 20-26
+    >>> midsommardagen(2009)
+    datetime.date(2009, 6, 20)
+    """
+
     date = datetime.date(year, 6, 20)
     while date.weekday() != 5:
         date = date + datetime.timedelta(days = 1)
 
     return date
 
-#Alla helgons dag is always the saturday in the period october 31 - november 6
 def alla_helgons_dag(year):
+    """Return the date of alla helgons dag(All Saints' Day) of a given year
+
+    The result is returned as a datetime.date()
+
+    Alla helgons dag is always the saturday in the period October 31 -
+    november 6
+
+
+    >>> alla_helgons_dag(2009)
+    datetime.date(2009, 10, 31)
+    """
+
     date = datetime.date(year, 10, 31)
     while date.weekday() != 5:
         date = date + datetime.timedelta(days = 1)
 
     return date
 
-#Påskdagen is the first Sunday after the first Full Moon on or after March 21.
-#Method used is from http://www.bbc.co.uk/dna/h2g2/A653267
 def paskdagen(year):
+    """Return the date of påskdagen(Easter sunday) of a given year
+
+    The result is returned as a datetime.date()
+
+    Påskdagen is the first Sunday after the first Full Moon on or after
+    March 21. Spencer Jones algorithm for calculating Easter Sunday is used
+    (http://sv.wikipedia.org/wiki/P%C3%A5skdagen#Algoritm_f.C3.B6r_p.C3.A5skdagen)
+
+
+    >>> paskdagen(2009)
+    datetime.date(2009, 4, 12)
+    """
+
     a = year % 19
     b = year / 100
     c = year % 100
@@ -73,6 +103,18 @@ def paskdagen(year):
     return datetime.date(year, month, date)
 
 def generate_holidays(year):
+    """Generates all the holidays for a given year
+
+
+    >>> generate_holidays(2009)
+    >>> len(Holiday.holidays)
+    11
+
+    >>> generate_holidays(1999)
+    >>> len(Holiday.holidays)
+    22
+    """
+
     Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
     Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
     _paskdagen = paskdagen(year)
@@ -89,6 +131,15 @@ def generate_holidays(year):
     Holiday(datetime.date(year, 12, 26), "Annandag jul")
 
 def is_holiday(date):
+    """Test if a given datetime.date is a holiday
+
+
+    >>> is_holiday(datetime.date(2009, 1, 1))
+    True
+    >>> is_holiday(datetime.date(2010, 2, 2))
+    False
+    """
+
     year = date.year
 
     # If nyårsdagen of the year that we are querying is not in the list of
@@ -97,3 +148,7 @@ def is_holiday(date):
         generate_holidays(year)
 
     return date in [ h.date for h in Holiday.holidays ]
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
