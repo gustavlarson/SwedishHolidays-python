@@ -28,6 +28,7 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 import datetime
 
+
 class Holiday:
     holidays = []
 
@@ -35,6 +36,7 @@ class Holiday:
         self.date = date
         self.name = name
         Holiday.holidays.append(self)
+
 
 def midsommardagen(year):
     """Return the date of midsommardagen(Midsummer's Day)
@@ -51,6 +53,7 @@ def midsommardagen(year):
         date = date + datetime.timedelta(days = 1)
 
     return date
+
 
 def alla_helgons_dag(year):
     """Return the date of alla helgons dag(All Saints' Day) of a given year
@@ -71,6 +74,7 @@ def alla_helgons_dag(year):
 
     return date
 
+
 def paskdagen(year):
     """Return the date of påskdagen(Easter sunday) of a given year
 
@@ -78,7 +82,7 @@ def paskdagen(year):
 
     Påskdagen is the first Sunday after the first Full Moon on or after
     March 21. Spencer Jones algorithm for calculating Easter Sunday is used
-    (http://sv.wikipedia.org/wiki/P%C3%A5skdagen#Algoritm_f.C3.B6r_p.C3.A5skdagen)
+    (http://sv.wikipedia.org/wiki/Påskdagen#Algoritm_för_påskdagen)
 
 
     >>> paskdagen(2009)
@@ -90,8 +94,8 @@ def paskdagen(year):
     c = year % 100
     d = b / 4
     e = b % 4
-    f = (b + 8) / 25;
-    g = (b - f + 1) / 3;
+    f = (b + 8) / 25
+    g = (b - f + 1) / 3
     h = (19 * a + b - d - g + 15) % 30
     i = c / 4
     k = c % 4
@@ -101,6 +105,7 @@ def paskdagen(year):
     date = (h + l - 7 * m + 114) % 31 + 1
 
     return datetime.date(year, month, date)
+
 
 def generate_holidays(year):
     """Generates all the holidays for a given year
@@ -130,6 +135,7 @@ def generate_holidays(year):
     Holiday(datetime.date(year, 12, 25), "Juldagen")
     Holiday(datetime.date(year, 12, 26), "Annandag jul")
 
+
 def is_holiday(date):
     """Test if a given datetime.date is a holiday
 
@@ -144,10 +150,11 @@ def is_holiday(date):
 
     # If nyårsdagen of the year that we are querying is not in the list of
     # holidays, we need to generate the holidays of this year
-    if not datetime.date(year, 1, 1) in [ h.date for h in Holiday.holidays ]:
+    if not datetime.date(year, 1, 1) in [h.date for h in Holiday.holidays]:
         generate_holidays(year)
 
-    return date in [ h.date for h in Holiday.holidays ]
+    return date in [h.date for h in Holiday.holidays]
+
 
 if __name__ == "__main__":
     import doctest
