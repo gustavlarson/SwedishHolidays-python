@@ -30,6 +30,22 @@ import datetime
 
 
 class Holiday:
+    """Class to hold all holidays
+
+    >>> Holiday(datetime.date(2009, 1, 1), 'Nyårsdagen') #doctest: +ELLIPSIS
+    <__main__.Holiday instance at 0x...>
+    >>> Holiday.holidays #doctest: +ELLIPSIS
+    [<__main__.Holiday instance at 0x...>]
+    >>> Holiday(datetime.date(2009, 12, 25), 'Juldagen') #doctest: +ELLIPSIS
+    <__main__.Holiday instance at 0x...>
+    >>> Holiday.holidays #doctest: +ELLIPSIS
+    ...                  #doctest: +NORMALIZE_WHITESPACE
+    [<__main__.Holiday instance at 0x...>, \
+            <__main__.Holiday instance at 0x...>]
+
+    >>> Holiday.holidays = [] #Destroy the objects we just created
+    """
+
     holidays = []
 
     def __init__(self, date, name):
