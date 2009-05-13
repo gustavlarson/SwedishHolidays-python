@@ -59,17 +59,23 @@ def midsommardagen(year):
 
     The result is returned as a datetime.date()
 
-    Midsommardagen is always the saturday in the period June 20-26
+    Midsommardagen is always the saturday in the period June 20-26.
+    Before 1954 it was always on June 24.
     >>> midsommardagen(2009)
     datetime.date(2009, 6, 20)
+    >>> midsommardagen(1950)
+    datetime.date(1950, 6, 24)
     >>> midsommardagen('foo')
     Traceback (most recent call last):
     TypeError: an integer is required
     """
 
-    date = datetime.date(year, 6, 20)
-    while date.weekday() != 5:
-        date = date + datetime.timedelta(days = 1)
+    if year >= 1954:
+        date = datetime.date(year, 6, 20)
+        while date.weekday() != 5:
+            date = date + datetime.timedelta(days = 1)
+    else:
+        date = datetime.date(year, 6, 24)
 
     return date
 
@@ -80,19 +86,24 @@ def alla_helgons_dag(year):
     The result is returned as a datetime.date()
 
     Alla helgons dag is always the saturday in the period October 31 -
-    november 6
+    November 6. Before 1954 it was always on November 1st.
 
 
     >>> alla_helgons_dag(2009)
     datetime.date(2009, 10, 31)
+    >>> alla_helgons_dag(1950)
+    datetime.date(1950, 11, 1)
     >>> alla_helgons_dag('foo')
     Traceback (most recent call last):
     TypeError: an integer is required
     """
 
-    date = datetime.date(year, 10, 31)
-    while date.weekday() != 5:
-        date = date + datetime.timedelta(days = 1)
+    if year >= 1954:
+        date = datetime.date(year, 10, 31)
+        while date.weekday() != 5:
+            date = date + datetime.timedelta(days = 1)
+    else:
+        date = datetime.date(year, 11, 1)
 
     return date
 
@@ -153,14 +164,16 @@ def _generate_holidays(year):
 
     Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
     Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
+    if year <= 1953: Holiday(datetime.date(year, 3, 25), "Jungfru Marias bebådelsedag")
     _paskdagen = paskdagen(year)
     Holiday(_paskdagen, "Påskdagen")
     #Långfredagen is the friday before påskdagen, which is always an sunday
     Holiday(_paskdagen - datetime.timedelta(days = 2), "Långfredagen")
     #Annandag påsk is always the day after påskdagen
     Holiday(_paskdagen + datetime.timedelta(days = 1), "Annandag påsk")
-    Holiday(datetime.date(year, 5, 1), "Första maj")
-    Holiday(datetime.date(year, 6, 6), "Nationaldagen")
+    if year >= 1939: Holiday(datetime.date(year, 5, 1), "Första maj")
+    if year <= 2004: Holiday(_paskdagen + datetime.timedelta(days = 50), "Annandag pingst")
+    if year >= 2005: Holiday(datetime.date(year, 6, 6), "Nationaldagen")
     Holiday(midsommardagen(year), "Midsommardagen")
     Holiday(alla_helgons_dag(year), "Alla helgons dag")
     Holiday(datetime.date(year, 12, 25), "Juldagen")
