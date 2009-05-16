@@ -190,7 +190,7 @@ def is_holiday(date):
     False
     >>> is_holiday('foo')
     Traceback (most recent call last):
-    TypeError: an datetime.date is required
+    TypeError: an datetime.date object is required
     """
 
     if not isinstance(date, datetime.date):
