@@ -61,6 +61,9 @@ class Holiday:
     def __cmp__(self, other):
         return cmp(self.date, other.date)
 
+    def __str__(self):
+        return "%(date)s %(name)s" % self.__dict__
+
 
 def midsommardagen(year):
     """Return the date of midsommardagen(Midsummer's Day)
