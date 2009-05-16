@@ -149,6 +149,8 @@ def paskdagen(year):
 def _generate_holidays(year):
     """Generates all the holidays for a given year
 
+    If the holidays are already generated, don't do anything
+
 
     >>> _generate_holidays(2009)
     >>> len(Holiday.holidays)
@@ -161,23 +163,38 @@ def _generate_holidays(year):
     TypeError: an integer is required
     """
 
+    # If nyårsdagen of the year that we are querying is not in the list of
+    # holidays, we need to generate the holidays of this year
+    if not datetime.date(year, 1, 1) in [h.date for h in Holiday.holidays]:
+        Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
+        Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
 
-    Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
-    Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
-    if year <= 1953: Holiday(datetime.date(year, 3, 25), "Jungfru Marias bebådelsedag")
-    _paskdagen = paskdagen(year)
-    Holiday(_paskdagen, "Påskdagen")
-    #Långfredagen is the friday before påskdagen, which is always an sunday
-    Holiday(_paskdagen - datetime.timedelta(days = 2), "Långfredagen")
-    #Annandag påsk is always the day after påskdagen
-    Holiday(_paskdagen + datetime.timedelta(days = 1), "Annandag påsk")
-    if year >= 1939: Holiday(datetime.date(year, 5, 1), "Första maj")
-    if year <= 2004: Holiday(_paskdagen + datetime.timedelta(days = 50), "Annandag pingst")
-    if year >= 2005: Holiday(datetime.date(year, 6, 6), "Nationaldagen")
-    Holiday(midsommardagen(year), "Midsommardagen")
-    Holiday(alla_helgons_dag(year), "Alla helgons dag")
-    Holiday(datetime.date(year, 12, 25), "Juldagen")
-    Holiday(datetime.date(year, 12, 26), "Annandag jul")
+        #Jungfru Marias bebådelsedag was removed in 1954
+        if year <= 1953: Holiday(datetime.date(year, 3, 25), \
+                "Jungfru Marias bebådelsedag")
+
+        _paskdagen = paskdagen(year)
+        Holiday(_paskdagen, "Påskdagen")
+        #Långfredagen is the friday before påskdagen,
+        #which is always an sunday
+        Holiday(_paskdagen - datetime.timedelta(days = 2), "Långfredagen")
+        #Annandag påsk is always the day after påskdagen
+        Holiday(_paskdagen + datetime.timedelta(days = 1), "Annandag påsk")
+
+        #Första maj was introduced in 1939
+        if year >= 1939: Holiday(datetime.date(year, 5, 1), "Första maj")
+
+        #Annandag pingst was replaced in 2005 with nationaldagen
+        if year <= 2004:
+            Holiday(_paskdagen + datetime.timedelta(days = 50), \
+                    "Annandag pingst")
+        else:
+            Holiday(datetime.date(year, 6, 6), "Nationaldagen")
+
+        Holiday(midsommardagen(year), "Midsommardagen")
+        Holiday(alla_helgons_dag(year), "Alla helgons dag")
+        Holiday(datetime.date(year, 12, 25), "Juldagen")
+        Holiday(datetime.date(year, 12, 26), "Annandag jul")
 
 
 def is_holiday(date):
@@ -196,14 +213,34 @@ def is_holiday(date):
     if not isinstance(date, datetime.date):
         raise TypeError('an datetime.date object is required')
 
-    year = date.year
-
-    # If nyårsdagen of the year that we are querying is not in the list of
-    # holidays, we need to generate the holidays of this year
-    if not datetime.date(year, 1, 1) in [h.date for h in Holiday.holidays]:
-        _generate_holidays(year)
+    _generate_holidays(date.year)
 
     return date in [h.date for h in Holiday.holidays]
+
+
+def all_holidays(start_date, end_date):
+    """Returns all holidays between two dates
+
+    The reslut is returned as a list of Holiday objects
+
+
+    >>> all_holidays(datetime.date(2010, 01, 01), datetime.date(2009, 01, 01))
+    Traceback (most recent call last):
+    ValueError: start_date needs to be earlier than end_date
+    >>> len(all_holidays(datetime.date(2009, 01, 01), \
+            datetime.date(2009, 04, 01)))
+    2
+    """
+
+    if start_date > end_date:
+        raise ValueError('start_date needs to be earlier than end_date')
+
+    #Generate the holidays for the period between the dates
+    for year in range(start_date.year, end_date.year + 1):
+        _generate_holidays(year)
+
+    return [holiday for holiday in Holiday.holidays \
+            if holiday.date >= start_date and holiday.date <= end_date]
 
 
 if __name__ == "__main__":
