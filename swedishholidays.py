@@ -42,7 +42,12 @@ class Holiday:
     ...                  #doctest: +NORMALIZE_WHITESPACE
     [<__main__.Holiday instance at 0x...>, \
             <__main__.Holiday instance at 0x...>]
-
+    >>> Holiday.holidays[0] < Holiday.holidays[1]
+    True
+    >>> Holiday.holidays[0] == Holiday.holidays[1]
+    False
+    >>> Holiday.holidays[0] > Holiday.holidays[1]
+    False
     >>> Holiday.holidays = [] #Destroy the objects we just created
     """
 
@@ -52,6 +57,9 @@ class Holiday:
         self.date = date
         self.name = name
         Holiday.holidays.append(self)
+
+    def __cmp__(self, other):
+        return cmp(self.date, other.date)
 
 
 def midsommardagen(year):
@@ -221,7 +229,7 @@ def is_holiday(date):
 def all_holidays(start_date, end_date):
     """Returns all holidays between two dates
 
-    The reslut is returned as a list of Holiday objects
+    The reslut is returned as a list of Holiday objects sorted by date.
 
 
     >>> all_holidays(datetime.date(2010, 01, 01), datetime.date(2009, 01, 01))
@@ -239,8 +247,10 @@ def all_holidays(start_date, end_date):
     for year in range(start_date.year, end_date.year + 1):
         _generate_holidays(year)
 
-    return [holiday for holiday in Holiday.holidays \
+    holidays = [holiday for holiday in Holiday.holidays \
             if holiday.date >= start_date and holiday.date <= end_date]
+    holidays.sort()
+    return holidays
 
 
 if __name__ == "__main__":
