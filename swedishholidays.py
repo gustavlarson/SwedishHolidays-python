@@ -177,35 +177,35 @@ def _generate_holidays(year):
     # If nyårsdagen of the year that we are querying is not in the list of
     # holidays, we need to generate the holidays of this year
     if not datetime.date(year, 1, 1) in [h.date for h in Holiday.holidays]:
-        Holiday(datetime.date(year, 1, 1), "Nyårsdagen")
-        Holiday(datetime.date(year, 1, 6), "Trettondedag jul")
+        Holiday(datetime.date(year, 1, 1), u"Nyårsdagen")
+        Holiday(datetime.date(year, 1, 6), u"Trettondedag jul")
 
         #Jungfru Marias bebådelsedag was removed in 1954
         if year <= 1953: Holiday(datetime.date(year, 3, 25), \
-                "Jungfru Marias bebådelsedag")
+                u"Jungfru Marias bebådelsedag")
 
         _paskdagen = paskdagen(year)
-        Holiday(_paskdagen, "Påskdagen")
+        Holiday(_paskdagen, u"Påskdagen")
         #Långfredagen is the friday before påskdagen,
         #which is always an sunday
-        Holiday(_paskdagen - datetime.timedelta(days = 2), "Långfredagen")
+        Holiday(_paskdagen - datetime.timedelta(days = 2), u"Långfredagen")
         #Annandag påsk is always the day after påskdagen
-        Holiday(_paskdagen + datetime.timedelta(days = 1), "Annandag påsk")
+        Holiday(_paskdagen + datetime.timedelta(days = 1), u"Annandag påsk")
 
         #Första maj was introduced in 1939
-        if year >= 1939: Holiday(datetime.date(year, 5, 1), "Första maj")
+        if year >= 1939: Holiday(datetime.date(year, 5, 1), u"Första maj")
 
         #Annandag pingst was replaced in 2005 with nationaldagen
         if year <= 2004:
             Holiday(_paskdagen + datetime.timedelta(days = 50), \
-                    "Annandag pingst")
+                    u"Annandag pingst")
         else:
-            Holiday(datetime.date(year, 6, 6), "Nationaldagen")
+            Holiday(datetime.date(year, 6, 6), u"Nationaldagen")
 
-        Holiday(midsommardagen(year), "Midsommardagen")
-        Holiday(alla_helgons_dag(year), "Alla helgons dag")
-        Holiday(datetime.date(year, 12, 25), "Juldagen")
-        Holiday(datetime.date(year, 12, 26), "Annandag jul")
+        Holiday(midsommardagen(year), u"Midsommardagen")
+        Holiday(alla_helgons_dag(year), u"Alla helgons dag")
+        Holiday(datetime.date(year, 12, 25), u"Juldagen")
+        Holiday(datetime.date(year, 12, 26), u"Annandag jul")
 
 
 def is_holiday(date):
